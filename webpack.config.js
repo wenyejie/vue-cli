@@ -109,7 +109,7 @@ module.exports = {
       filename: 'index.html'
     }),
 
-    // 清理/dist文件夹
+    // 清理文件夹
     new CleanWebpackPlugin({
       cleanOnceBeforeBuildPatterns: ['dist']
     })
