@@ -64,7 +64,7 @@ module.exports = {
             options: {
               limit: 1024, // 当图片小于1kb时, 打包成base64
               outputPath: 'img',
-              name (file) {
+              name () {
                 return isProd ? '[name].[hash:7].[ext]' : '[path][name].[ext]'
               }
             }
@@ -79,7 +79,7 @@ module.exports = {
             options: {
               limit: 1024, // 当图片小于1kb时, 打包成base64
               outputPath: 'fonts',
-              name (file) {
+              name () {
                 return isProd ? '[name].[hash:7].[ext]' : '[path][name].[ext]'
               }
             }
