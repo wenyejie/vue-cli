@@ -5,10 +5,11 @@
  */
 
 import './styles'
-import img from './assets/signet-icon.png'
+import Vue from 'vue'
+import router from './router'
+import App from './App.vue'
 
-const $img = document.createElement('img')
-$img.src = img
-document.body.appendChild($img)
-
-console.log('fuck me!')
+new Vue({
+  router,
+  render: h => h(App)
+}).$mount('#app')
