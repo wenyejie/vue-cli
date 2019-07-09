@@ -3,6 +3,7 @@
  * @date: 2019-07-08
  * @email: wenyejie@foxmail.com
  */
+const webpack = require('webpack')
 const path = require('path')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
@@ -12,8 +13,6 @@ const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 
 const isProd = process.env.NODE_ENV === 'production'
-
-console.log(`isProd: ${ isProd }`)
 
 // styleLoader
 // 'style-loader', // 将 JS 字符串生成为 style 节点
@@ -36,9 +35,11 @@ const styleLoader = () => [
 
 const webpackConfig = {
   mode: isProd ? 'production' : 'development',
-  entry: './src/main.js',
+  entry: {
+    app: ['./src/main.js']
+  },
   output: {
-    filename: 'js/[name]..[hash:7].js',
+    filename: 'js/[name].[hash:8].js',
     path: path.resolve(__dirname, 'dist')
   },
 
@@ -63,7 +64,8 @@ const webpackConfig = {
                 preserveWhitespace: false
               }
             }
-          }
+          },
+          'cache-loader'
         ]
       },
       {
@@ -90,7 +92,7 @@ const webpackConfig = {
             options: {
               limit: 1024, // 当图片小于1kb时, 打包成base64
               name () {
-                return isProd ? 'img/[name].[hash:7].[ext]' : '[path][name].[ext]'
+                return isProd ? 'img/[name].[hash:8].[ext]' : '[path][name].[ext]'
               }
             }
           }
@@ -104,7 +106,7 @@ const webpackConfig = {
             options: {
               limit: 1024, // 当图片小于1kb时, 打包成base64
               name () {
-                return isProd ? 'fonts/[name].[hash:7].[ext]' : '[path][name].[ext]'
+                return isProd ? 'fonts/[name].[hash:8].[ext]' : '[path][name].[ext]'
               }
             }
           }
@@ -113,27 +115,56 @@ const webpackConfig = {
     ]
   },
   plugins: [
-
+    // vue loader
     new VueLoaderPlugin(),
+
     // 处理html https://github.com/jantimon/html-webpack-plugin
     new HtmlWebpackPlugin({
       title: 'vue-cli title test',
       minify: isProd,
       template: './publish/index.html',
       filename: 'index.html'
+    }),
+
+    // 代码分割
+    new webpack.optimize.SplitChunksPlugin({
+      cacheGroups: {
+        default: {
+          minChunks: 2,
+          priority: -20,
+          reuseExistingChunk: true
+        },
+        runtimeChunk: true,
+        vendors: {
+          chunks: 'all',
+          test: /node_modules/,
+          maxInitialRequests: 5,
+          minSize: 0,
+          name: 'vendor'
+        }
+      }
+    }),
+
+    // 传入全局参数
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: '\'' + process.env.NODE_ENV + '\'',
+        BUILD_ENV: '\'' + process.env.BUILD_ENV + '\''
+      }
     })
   ]
 }
 
 if (isProd) {
   webpackConfig.plugins.push(
+
     // 清理文件夹
     new CleanWebpackPlugin(),
 
     // css提取
     new MiniCssExtractPlugin({
-      filename: 'css/[name].css',
-      chunkFilename: 'css/[id].css'
+      filename: 'css/[name].[hash:8].css',
+      chunkFilename: 'css/[id].[hash:8].css'
     })
   )
 
@@ -152,7 +183,7 @@ if (isProd) {
     ],
 
     // 代码防止重复 https://webpack.docschina.org/guides/code-splitting
-    splitChunks: {
+    /*splitChunks: {
       chunks: 'async',
       minSize: 30000,
       maxSize: 0,
@@ -178,7 +209,7 @@ if (isProd) {
           enforce: true
         }
       }
-    }
+    }*/
   }
 }
 
