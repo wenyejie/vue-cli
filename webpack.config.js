@@ -39,12 +39,12 @@ const webpackConfig = {
     app: ['./src/main.js']
   },
   output: {
-    filename: 'js/[name].[hash:8].js',
+    filename: 'js/[name].[contenthash:8].js',
     path: path.resolve(__dirname, 'dist')
   },
 
   // 开发工具, source map
-  devtool: isProd ? false : 'inline-source-map',
+  devtool: isProd ? 'nosources-source-map' : 'eval-source-map',
 
   // 开发服务器
   devServer: {
@@ -92,7 +92,7 @@ const webpackConfig = {
             options: {
               limit: 1024, // 当图片小于1kb时, 打包成base64
               name () {
-                return isProd ? 'img/[name].[hash:8].[ext]' : '[path][name].[ext]'
+                return isProd ? 'img/[name].[contenthash:8].[ext]' : '[path][name].[ext]'
               }
             }
           }
@@ -106,7 +106,7 @@ const webpackConfig = {
             options: {
               limit: 1024, // 当图片小于1kb时, 打包成base64
               name () {
-                return isProd ? 'fonts/[name].[hash:8].[ext]' : '[path][name].[ext]'
+                return isProd ? 'fonts/[name].[contenthash:8].[ext]' : '[path][name].[ext]'
               }
             }
           }
@@ -122,6 +122,7 @@ const webpackConfig = {
     new HtmlWebpackPlugin({
       title: 'vue-cli title test',
       minify: isProd,
+      chunks: ['app', 'vendor'],
       template: './publish/index.html',
       filename: 'index.html'
     }),
@@ -163,8 +164,8 @@ if (isProd) {
 
     // css提取
     new MiniCssExtractPlugin({
-      filename: 'css/[name].[hash:8].css',
-      chunkFilename: 'css/[id].[hash:8].css'
+      filename: 'css/[name].[contenthash:8].css',
+      chunkFilename: 'css/[id].[contenthash:8].css'
     })
   )
 
@@ -175,7 +176,8 @@ if (isProd) {
 
       // js压缩
       new TerserJSPlugin({
-        parallel: true
+        parallel: true,
+        sourceMap: true
       }),
 
       // css压缩
