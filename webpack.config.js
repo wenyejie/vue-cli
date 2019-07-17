@@ -120,8 +120,27 @@ const webpackConfig = {
 
     // 处理html https://github.com/jantimon/html-webpack-plugin
     new HtmlWebpackPlugin({
-      title: 'vue-cli title test',
-      minify: isProd,
+      minify: isProd ? {
+
+        // 移除注释
+        removeComments: true,
+
+        // 移除空格, 换行符
+        collapseWhitespace: true,
+
+        // 压缩css
+        minifyCSS: true,
+
+        // 压缩js
+        minifyJS: true,
+
+        // 去掉script标签的type属性
+        removeScriptTypeAttributes: true,
+
+        // 去掉style和link标签的type属性
+        removeStyleLinkTypeAttributes: true
+
+      } : false,
       chunks: ['app', 'vendor'],
       template: './publish/index.html',
       filename: 'index.html'
