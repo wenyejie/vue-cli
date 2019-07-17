@@ -19,14 +19,12 @@ const isProd = process.env.NODE_ENV === 'production'
 // MiniCssExtractPlugin.loader 必须放在第一位
 // https://webpack.docschina.org/loaders/css-loader
 const styleLoader = () => [
-  // isProd ? {
-  //   loader: MiniCssExtractPlugin.loader,
-  //   options: {
-  //     publicPath: '../'
-  //   }
-  // } : 'style-loader',
-
-  'style-loader',
+  isProd ? {
+    loader: MiniCssExtractPlugin.loader,
+    options: {
+      publicPath: '../'
+    }
+  } : 'style-loader',
 
   // 将 CSS 转化成 CommonJS 模块
   {
