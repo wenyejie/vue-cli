@@ -21,5 +21,6 @@ export default {
 <style lang="scss">
 .demo {
   color: #666;
+  background: linear-gradient(to bottom, #ffe500 0%, #ffe500 50%, #121 50%, #121 100%);
 }
 </style>
