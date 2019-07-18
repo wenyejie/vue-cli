@@ -14,6 +14,16 @@ export default {
     return {
       message: 'Hello Demo!'
     }
+  },
+  methods: {
+    async getList () {
+      const response = await this.getDataList()
+    }
+  },
+  created () {
+    const data = Object.assign({}, {name: 'Storm'}, {name: 'wenyejie'})
+    this.message = data.name
+    this.getList()
   }
 }
 </script>

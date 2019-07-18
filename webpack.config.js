@@ -65,6 +65,20 @@ const webpackConfig = {
   module: {
     rules: [
       {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: [
+          {
+            loader: 'babel-loader',
+            options: {
+              cacheDirectory: true,
+              presets: ['@babel/preset-env'],
+              plugins: ['@babel/plugin-transform-runtime']
+            }
+          }
+        ]
+      },
+      {
         test: /\.vue$/,
         use: [
           {
@@ -214,7 +228,7 @@ if (isProd) {
     ],
 
     // 代码防止重复 https://webpack.docschina.org/guides/code-splitting
-    /*splitChunks: {
+    splitChunks: {
       chunks: 'async',
       minSize: 30000,
       maxSize: 0,
@@ -240,7 +254,7 @@ if (isProd) {
           enforce: true
         }
       }
-    }*/
+    }
   }
 }
 
